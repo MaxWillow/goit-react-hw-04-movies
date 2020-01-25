@@ -1,10 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import T from 'prop-types';
 import AdditionalInformation from '../components/AdditionalInformation/AdditionalInformation';
 import * as API from '../services/movie_api';
-import Cast from './Cast';
-import Reviews from './Reviews';
+
+const AsyncCast = lazy(() =>
+  import('./Cast' /* webpackChunkName: "cast-page" */),
+);
+
+const AsyncRewiews = lazy(() =>
+  import('./Reviews' /* webpackChunkName: "reviews-page" */),
+);
 
 class MovieDetailsPage extends Component {
   static propTypes = {
@@ -78,10 +84,15 @@ class MovieDetailsPage extends Component {
               movieId={match.params.movieId}
               location={location}
             />
-            <Switch>
-              <Route path="/movies/:movieId/cast" component={Cast} />
-              <Route path="/movies/:movieId/reviews" component={Reviews} />
-            </Switch>
+            <Suspense fallback={<h2>Loading...</h2>}>
+              <Switch>
+                <Route path="/movies/:movieId/cast" component={AsyncCast} />
+                <Route
+                  path="/movies/:movieId/reviews"
+                  component={AsyncRewiews}
+                />
+              </Switch>
+            </Suspense>
           </>
         )}
       </>
