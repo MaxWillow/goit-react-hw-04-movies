@@ -1,0 +1,1 @@
+{"version":3,"sources":["Navigation.module.css"],"names":[],"mappings":"AAAA,wBACE,eACF,CAEA,wBACE,oBAAqB,CACrB,SACF","file":"main.0b3b89b5.chunk.css","sourcesContent":[".list {\n  list-style: none;\n}\n\n.link {\n  text-decoration: none;\n  color: red;\n}\n"]}
