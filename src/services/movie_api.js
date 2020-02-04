@@ -3,6 +3,9 @@ import axios from 'axios';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = 'e0c73a674fe9ac3d07ab423a32b0f862';
 
+export const imageURLBaseWidth200 = 'https://image.tmdb.org/t/p/w200';
+export const imageURLBaseWidth300 = 'https://image.tmdb.org/t/p/w300';
+
 export const fetchMostPopularMovies = () => {
   return axios.get(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
 };

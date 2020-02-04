@@ -1,28 +1,27 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import routes from '../routes/routes';
 import Navigation from './Navigation/Navigation';
-
-const AsyncHomePage = lazy(() =>
-  import('../pages/HomePage' /* webpackChunkName: "home-page" */),
-);
-const AsyncMoviesPage = lazy(() =>
-  import('../pages/MoviesPage' /* webpackChunkName: "movie-page" */),
-);
-const AsyncMovieDetailsPage = lazy(() =>
-  import(
-    '../pages/MovieDetailsPage' /* webpackChunkName: "movie-details-page" */
-  ),
-);
 
 const App = () => (
   <div>
     <Navigation />
     <Suspense fallback={<h2>Loading...</h2>}>
       <Switch>
-        <Route path="/" exact component={AsyncHomePage} />
-        <Route path="/movies/:movieId" component={AsyncMovieDetailsPage} />
-        <Route path="/movies" component={AsyncMoviesPage} />
-        <Redirect to="/" />
+        <Route
+          path={routes.HOME_PAGE.path}
+          exact
+          component={routes.HOME_PAGE.component}
+        />
+        <Route
+          path={routes.MOVIES_DETAILS_PAGE.path}
+          component={routes.MOVIES_DETAILS_PAGE.component}
+        />
+        <Route
+          path={routes.MOVIES_PAGE.path}
+          component={routes.MOVIES_PAGE.component}
+        />
+        <Redirect to={routes.HOME_PAGE.path} />
       </Switch>
     </Suspense>
   </div>

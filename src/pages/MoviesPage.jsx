@@ -25,6 +25,7 @@ class Movies extends Component {
 
   state = {
     movies: [],
+    error: null,
   };
 
   componentDidMount() {
@@ -48,18 +49,21 @@ class Movies extends Component {
           search: `query=${query}`,
         });
       })
-      .catch(err => {
-        throw new Error(err);
-      });
+      .catch(err =>
+        this.setState({
+          error: err.message,
+        }),
+      );
   };
 
   render() {
-    const { movies } = this.state;
+    const { movies, error } = this.state;
     const { match, location } = this.props;
 
     return (
       <div>
         <Searchbar onSubmit={this.onSearch} />
+        {error && <p>Something went wrong... Please try again!</p>}
         {movies.length > 0 && (
           <ul>
             {movies.map(movie => (

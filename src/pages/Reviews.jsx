@@ -13,6 +13,7 @@ class Reviews extends Component {
 
   state = {
     reviews: [],
+    error: null,
   };
 
   componentDidMount() {
@@ -20,16 +21,19 @@ class Reviews extends Component {
 
     API.fetchMovieReviews(match.params.movieId)
       .then(res => this.setState({ reviews: res.data.results }))
-      .catch(err => {
-        throw new Error(err);
-      });
+      .catch(err =>
+        this.setState({
+          error: err.message,
+        }),
+      );
   }
 
   render() {
-    const { reviews } = this.state;
+    const { reviews, error } = this.state;
 
     return (
       <div>
+        {error && <h2>Ups! Something went wrong... Please try again!</h2>}
         {reviews.length > 0 ? (
           <ul>
             {reviews.map(review => (

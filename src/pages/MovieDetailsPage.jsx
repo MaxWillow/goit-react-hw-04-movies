@@ -1,16 +1,9 @@
-import React, { Component, lazy, Suspense } from 'react';
+import React, { Component, Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import T from 'prop-types';
+import routes from '../routes/routes';
 import AdditionalInformation from '../components/AdditionalInformation/AdditionalInformation';
 import * as API from '../services/movie_api';
-
-const AsyncCast = lazy(() =>
-  import('./Cast' /* webpackChunkName: "cast-page" */),
-);
-
-const AsyncRewiews = lazy(() =>
-  import('./Reviews' /* webpackChunkName: "reviews-page" */),
-);
 
 class MovieDetailsPage extends Component {
   static propTypes = {
@@ -20,6 +13,7 @@ class MovieDetailsPage extends Component {
       }),
     }).isRequired,
     history: T.shape({
+      goBack: T.func,
       push: T.func,
     }).isRequired,
     location: T.shape({
@@ -31,34 +25,38 @@ class MovieDetailsPage extends Component {
 
   state = {
     movieDetails: null,
+    error: null,
   };
 
   componentDidMount() {
     const { match } = this.props;
     API.fetchDetailsAboutMovie(match.params.movieId)
       .then(res => this.setState({ movieDetails: res.data }))
-      .catch(err => {
-        throw new Error(err);
-      });
+      .catch(err =>
+        this.setState({
+          error: err.message,
+        }),
+      );
   }
 
   onGoBack = () => {
     const { history, location } = this.props;
 
     if (location.state) {
-      history.push(location.state.from);
+      history.goBack();
       return;
     }
 
-    history.push('/movies');
+    history.push(routes.MOVIES_PAGE.path);
   };
 
   render() {
     const { match, location } = this.props;
-    const { movieDetails } = this.state;
+    const { movieDetails, error } = this.state;
 
     return (
       <>
+        {error && <h2>Ups! Something went wrong... Please try again!</h2>}
         {movieDetails && (
           <>
             <button type="button" onClick={this.onGoBack}>
@@ -77,7 +75,7 @@ class MovieDetailsPage extends Component {
               </ul>
             )}
             <img
-              src={`https://image.tmdb.org/t/p/w300${movieDetails.poster_path}`}
+              src={`${API.imageURLBaseWidth300}${movieDetails.poster_path}`}
               alt={movieDetails.original_title}
             />
             <AdditionalInformation
@@ -86,10 +84,13 @@ class MovieDetailsPage extends Component {
             />
             <Suspense fallback={<h2>Loading...</h2>}>
               <Switch>
-                <Route path="/movies/:movieId/cast" component={AsyncCast} />
                 <Route
-                  path="/movies/:movieId/reviews"
-                  component={AsyncRewiews}
+                  path={routes.CAST_PAGE.path}
+                  component={routes.CAST_PAGE.component}
+                />
+                <Route
+                  path={routes.REVIEWS_PAGE.path}
+                  component={routes.REVIEWS_PAGE.component}
                 />
               </Switch>
             </Suspense>

@@ -13,6 +13,7 @@ class Cast extends Component {
 
   state = {
     castList: [],
+    error: null,
   };
 
   componentDidMount() {
@@ -20,22 +21,25 @@ class Cast extends Component {
 
     API.fetchMovieCast(match.params.movieId)
       .then(res => this.setState({ castList: res.data.cast }))
-      .catch(err => {
-        throw new Error(err);
-      });
+      .catch(err =>
+        this.setState({
+          error: err.message,
+        }),
+      );
   }
 
   render() {
-    const { castList } = this.state;
+    const { castList, error } = this.state;
 
     return (
       <div>
+        {error && <h2>Ups! Something went wrong... Please try again!</h2>}
         {castList.length > 0 && (
           <ul>
             {castList.map(el => (
               <li key={el.id}>
                 <img
-                  src={`https://image.tmdb.org/t/p/w200${el.profile_path}`}
+                  src={`${API.imageURLBaseWidth200}${el.profile_path}`}
                   alt={el.name}
                 />
                 <p>{el.name}</p>

@@ -14,23 +14,27 @@ class HomePage extends Component {
 
   state = {
     movies: [],
+    error: null,
   };
 
   componentDidMount() {
     API.fetchMostPopularMovies()
       .then(res => this.setState({ movies: res.data.results }))
-      .catch(err => {
-        throw new Error(err);
-      });
+      .catch(err =>
+        this.setState({
+          error: err.message,
+        }),
+      );
   }
 
   render() {
-    const { movies } = this.state;
+    const { movies, error } = this.state;
     const { location } = this.props;
 
     return (
       <div>
         <h2>Trending today</h2>
+        {error && <p>Something went wrong... Please try again!</p>}
         {movies.length > 0 && (
           <ul>
             {movies.map(movie => (

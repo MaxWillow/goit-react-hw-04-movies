@@ -9,6 +9,7 @@ const AdditionalInformation = ({ movieId, location }) => (
         pathname: `/movies/${movieId}/cast`,
         state: { from: { ...location } },
       }}
+      replace
     >
       Cast
     </Link>
@@ -18,6 +19,7 @@ const AdditionalInformation = ({ movieId, location }) => (
         pathname: `/movies/${movieId}/reviews`,
         state: { from: { ...location } },
       }}
+      replace
     >
       Reviews
     </Link>
