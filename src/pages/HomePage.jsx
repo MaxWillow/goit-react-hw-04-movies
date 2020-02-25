@@ -33,7 +33,7 @@ class HomePage extends Component {
 
     return (
       <div>
-        <h2>Trending today</h2>
+        <h2>Trending today. Check this out</h2>
         {error && <p>Something went wrong... Please try again!</p>}
         {movies.length > 0 && (
           <ul>
